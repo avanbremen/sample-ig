@@ -1,0 +1,30 @@
+# IDE
+.idea/
+.vscode/
+.vs/
+
+# Build output
+output/
+temp/
+
+# IG Publisher cache
+template/
+input-cache/
+txCache/
+
+# Generated packages
+*.tgz
+*.pack
+
+# Generated files
+Requirements-fromNarrative.json
+
+# Jekyll cache
+.jekyll-cache/
+
+# Local tooling
+publisher.jar
+
+# OS generated files
+.DS_Store
+Thumbs.db

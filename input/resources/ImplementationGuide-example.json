@@ -1,0 +1,21 @@
+{
+  "resourceType": "ImplementationGuide",
+  "id": "example",
+  "url": "http://example.org/fhir/ImplementationGuide/example",
+  "version": "0.1.0",
+  "name": "ExampleIG",
+  "title": "Example FHIR IG",
+  "status": "draft",
+  "packageId": "example.fhir.ig",
+  "license": "CC0-1.0",
+  "fhirVersion": [
+    "4.0.1"
+  ],
+  "definition": {
+    "page": {
+      "nameUrl": "index.html",
+      "title": "Home",
+      "generation": "markdown"
+    }
+  }
+}
