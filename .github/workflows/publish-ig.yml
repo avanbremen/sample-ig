@@ -6,7 +6,8 @@ on:
   push:
     tags:
       # Trigger on tags that look like a version.
-      # The Validate SemVer tag step below performs the strict validation.
+      # GitHub uses glob patterns here, not regular expressions.
+      # The Validate SemVer tag step below performs strict validation.
       - '*.*.*'
 
 permissions:
@@ -18,17 +19,16 @@ jobs:
 
     steps:
       - name: Validate SemVer tag
-        # GitHub tag filters use glob patterns, not regular expressions.
-        # This step performs strict SemVer validation.
-        #
         # Based on the official SemVer regex:
         # https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
         #
         # Bash does not support \d or non-capturing groups (?:...),
         # so this is the Bash-compatible equivalent.
+        #
+        # Tags with a leading "v", such as v1.0.0, are intentionally not accepted.
         run: |
           SEMVER_REGEX='^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-((0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*))*))?(\+([0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*))?$'
-          
+
           if [[ ! "${GITHUB_REF_NAME}" =~ $SEMVER_REGEX ]]; then
             echo "Tag '${GITHUB_REF_NAME}' is not a valid SemVer version."
             echo "Expected examples: 1.0.0, 1.2.3, 1.0.0-alpha.1, 1.0.0+build.1"
@@ -37,22 +37,25 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@v6
-        # Fetch all history and tags.
-        # Not strictly required for the current build,
-        # but useful for future version-aware behavior.
         with:
+          # Fetch all history and tags.
+          # Not strictly required for the current build, but useful for future
+          # version-aware features such as changelogs, redirects, or version indexes.
           fetch-depth: 0
 
       - name: Setup Java
         uses: actions/setup-java@v5
         with:
-          # Use Eclipse Temurin 25 Long-Term Supported (LTS) release of JDK.
+          # FHIR IG Publisher runs on Java.
           distribution: temurin
           java-version: '25'
 
       - name: Cache FHIR packages
         uses: actions/cache@v5
         with:
+          # FHIR IG Publisher downloads FHIR packages, templates and dependencies
+          # into the user-level FHIR package cache. Caching this directory speeds up
+          # repeated builds while still allowing the publisher to resolve missing packages.
           path: ~/.fhir/packages
           key: fhir-packages-${{ runner.os }}-${{ hashFiles('ig.ini', 'input/**/*') }}
           restore-keys: |
@@ -61,19 +64,31 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
+          # The FHIR IG Publisher uses Jekyll to assemble the generated static site.
+          # bundler-cache: true installs and caches the gems from the Gemfile in
+          # the repository root, so no separate "gem install jekyll" step is needed.
           ruby-version: ruby
           bundler-cache: true
 
       - name: Download FHIR IG Publisher
+        # Always download the latest publisher instead of caching publisher.jar.
+        # This keeps the workflow simple and avoids using a stale cached jar when
+        # the upstream "latest" release changes.
         run: |
           curl -L https://github.com/HL7/fhir-ig-publisher/releases/latest/download/publisher.jar -o publisher.jar
 
       - name: Build IG
+        # Explicitly set UTF-8 for the Java process. GitHub-hosted Linux runners
+        # normally use UTF-8 already, but this makes the build setting intentional
+        # and consistent with local Windows builds.
         run: |
           java -Dfile.encoding=UTF-8 -jar publisher.jar -ig ig.ini
 
       - name: Add .nojekyll
-        # Prevent GitHub Pages from processing the generated static site with Jekyll.
+        # GitHub Pages may process published content with Jekyll. This generated
+        # IG is already a complete static site, so GitHub Pages should serve the
+        # files as-is. The .nojekyll marker disables GitHub Pages' Jekyll step and
+        # avoids surprises with generated files or folders that Jekyll treats specially.
         run: |
           touch output/.nojekyll
 
