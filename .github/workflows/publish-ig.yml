@@ -110,4 +110,5 @@ jobs:
           publish_dir: output
           destination_dir: ${{ github.ref_name }}
           keep_files: true
+          cname: sample-ig.xtracked.io
           commit_message: Deploy IG version ${{ github.ref_name }}
