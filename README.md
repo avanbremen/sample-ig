@@ -26,7 +26,6 @@ Shorthand (FSH).
 │   └── resources/
 │       └── ImplementationGuide-example.json
 ├── .gitignore
-├── Gemfile
 └── ig.ini
 ```
 
@@ -149,19 +148,3 @@ The FHIR IG Publisher already generates a complete static website.
 
 GitHub Pages normally supports an additional Jekyll processing step before publishing content. The `.nojekyll` marker
 instructs GitHub Pages to serve the generated files exactly as produced by the FHIR IG Publisher.
-
-## Why use a Gemfile?
-
-The FHIR IG Publisher uses Jekyll to assemble the final website.
-
-The repository contains a `Gemfile`:
-
-```ruby
-source "https://rubygems.org"
-
-gem "jekyll"
-```
-
-GitHub Actions automatically installs and caches the required Ruby gems based on this file.
-
-Bundler is included with modern Ruby installations and is used automatically by the GitHub Actions workflow.
