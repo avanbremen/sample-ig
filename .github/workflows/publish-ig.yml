@@ -64,11 +64,16 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          # The FHIR IG Publisher uses Jekyll to assemble the generated static site.
-          # bundler-cache: true installs and caches the gems from the Gemfile in
-          # the repository root, so no separate "gem install jekyll" step is needed.
+          # FHIR IG Publisher uses Jekyll to assemble the generated static site.
+          # This step only installs Ruby. Jekyll is installed explicitly in the next step,
+          # because the publisher invokes "jekyll" as an external command.
           ruby-version: ruby
-          bundler-cache: true
+
+      - name: Install Jekyll
+        # FHIR IG Publisher invokes "jekyll" as an external command.
+        # Installing it as a gem makes the executable available on PATH.
+        run: |
+          gem install jekyll
 
       - name: Download FHIR IG Publisher
         # Always download the latest publisher instead of caching publisher.jar.
@@ -81,7 +86,12 @@ jobs:
         # Explicitly set UTF-8 for the Java process. GitHub-hosted Linux runners
         # normally use UTF-8 already, but this makes the build setting intentional
         # and consistent with local Windows builds.
+        #
+        # The "which" commands are diagnostic and can be removed after the first
+        # successful deployment. They show which executables are available on PATH.
         run: |
+          which ruby
+          which jekyll
           java -Dfile.encoding=UTF-8 -jar publisher.jar -ig ig.ini
 
       - name: Add .nojekyll
