@@ -26,6 +26,8 @@ Shorthand (FSH).
 │   └── resources/
 │       └── ImplementationGuide-example.json
 ├── .gitignore
+├── LICENSE
+├── README.md
 └── ig.ini
 ```
 
@@ -107,16 +109,69 @@ The workflow:
 3. Builds the Implementation Guide.
 4. Publishes the generated output to the `gh-pages` branch.
 5. Stores each version in its own directory.
+6. Updates the `latest` alias to point to the most recently published version.
+7. Updates the root page to redirect to `latest`.
 
 Example:
 
 ```text
-https://<organization>.github.io/<repository>/0.1.0/
-https://<organization>.github.io/<repository>/0.2.0/
-https://<organization>.github.io/<repository>/1.0.0/
+https://sample-ig.xtracked.io/
+https://sample-ig.xtracked.io/latest/
+https://sample-ig.xtracked.io/0.1.2/
 ```
 
-## Why not commit publisher.jar?
+### Versioned publishing
+
+Each release is published to its own version folder.
+
+Example:
+
+```text
+/
+├── latest/
+├── 0.1.0/
+├── 0.1.1/
+└── 0.1.2/
+```
+
+The root URL redirects to `latest`, and `latest` redirects to the most recently published version.
+
+Example:
+
+```text
+https://sample-ig.xtracked.io/
+→ https://sample-ig.xtracked.io/latest/
+→ https://sample-ig.xtracked.io/0.1.2/
+```
+
+This approach keeps all previously published versions available while providing a stable URL for the latest release.
+
+### Custom domain support
+
+The GitHub Actions workflow automatically publishes a CNAME file to the `gh-pages` branch. This allows GitHub Pages to
+serve the generated site through a custom domain.
+
+Example:
+
+```text
+https://sample-ig.xtracked.io/
+```
+
+After the first successful deployment:
+
+1. Open Settings > Pages.
+2. Select the `gh-pages` branch and save the configuration.
+3. Verify that the custom domain has been detected from the published CNAME file.
+4. Enable "Enforce HTTPS" after GitHub has provisioned the TLS certificate.
+
+GitHub automatically provisions and renews the TLS certificate for the custom domain.
+
+## Design decisions
+
+The repository intentionally favors simplicity and maintainability over feature completeness. The following sections
+explain some of the key implementation choices.
+
+### Why not commit publisher.jar?
 
 The FHIR IG Publisher is downloaded during each build.
 
@@ -131,7 +186,7 @@ This approach favors simplicity over strict build reproducibility.
 
 Projects that require fully reproducible builds may prefer to pin a specific publisher version.
 
-## Why cache FHIR packages?
+### Why cache FHIR packages?
 
 The FHIR IG Publisher downloads templates, FHIR packages and dependencies into:
 
@@ -142,9 +197,17 @@ The FHIR IG Publisher downloads templates, FHIR packages and dependencies into:
 Caching this directory significantly reduces build times while still allowing the publisher to download missing
 dependencies when required.
 
-## Why use .nojekyll?
+### Why use .nojekyll?
 
 The FHIR IG Publisher already generates a complete static website.
 
 GitHub Pages normally supports an additional Jekyll processing step before publishing content. The `.nojekyll` marker
 instructs GitHub Pages to serve the generated files exactly as produced by the FHIR IG Publisher.
+
+### Why use redirects instead of copying the latest version?
+
+Each version is published only once.
+
+The `latest` location contains a lightweight redirect rather than a copy of the generated HTML output. This avoids
+storing duplicate content and ensures that all version-specific URLs remain the canonical locations of published
+releases.
