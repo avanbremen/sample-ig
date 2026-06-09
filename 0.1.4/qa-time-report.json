@@ -1,0 +1,88 @@
+{
+  "date" : "Tue, 09 Jun, 2026 14:42:02 +0000",
+  "doco" : "For each file: start is seconds after start activity occurred. Length = milliseconds activity took",
+  "files" : [{
+    "name" : "/input/resources/ImplementationGuide-example.json",
+    "size" : 444,
+    "processes" : [{
+      "activity" : "load",
+      "start" : 32,
+      "length" : 15
+    },
+    {
+      "activity" : "checkR4R4B",
+      "start" : 32,
+      "length" : 11
+    },
+    {
+      "activity" : "generateNarratives",
+      "start" : 32,
+      "length" : 72
+    },
+    {
+      "activity" : "validate",
+      "start" : 32,
+      "length" : 2970
+    },
+    {
+      "activity" : "checkConformanceResources3",
+      "start" : 35,
+      "length" : 1
+    },
+    {
+      "activity" : "scanForUsageStats",
+      "start" : 35,
+      "length" : 1
+    },
+    {
+      "activity" : "generate1",
+      "start" : 35,
+      "length" : 44
+    },
+    {
+      "activity" : "generate2",
+      "start" : 38,
+      "length" : 47
+    },
+    {
+      "activity" : "generateValidationPack",
+      "start" : 41,
+      "length" : 3
+    },
+    {
+      "activity" : "scanExamplesForR5",
+      "start" : 45,
+      "length" : 1
+    }]
+  },
+  {
+    "name" : "/input/includes/menu.xml",
+    "size" : 127
+  },
+  {
+    "name" : "/input/pagecontent/index.md",
+    "size" : 140,
+    "processes" : [{
+      "activity" : "generate1",
+      "start" : 35,
+      "length" : 1
+    }]
+  },
+  {
+    "name" : "/template/config",
+    "size" : 0
+  },
+  {
+    "name" : "/template/config/_config.yml",
+    "size" : 140
+  },
+  {
+    "name" : "/temp/pages/_includes/artifacts.xml",
+    "size" : 600,
+    "processes" : [{
+      "activity" : "generate2",
+      "start" : 38,
+      "length" : 1
+    }]
+  }]
+}

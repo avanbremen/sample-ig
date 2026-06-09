@@ -1,0 +1,18 @@
+ExampleIG : Validation Results
+=========================================
+
+err = 2, warn = 5, info = 0
+IG Publisher Version: 2.2.8
+Generated Tue Jun 09 14:42:47 UTC 2026. FHIR version 4.0.1 for example.fhir.ig#0.1.0 (canonical = http://example.org/fhir)
+ Build Errors : 1 / 5 / 0
+ /home/runner/work/sample-ig/sample-ig/input/resources/ImplementationGuide-example : 1 / 0 / 1
+</table>
+== n/a ==
+ERROR: ImplementationGuide.definition.parameter[21].value: Supressed messages file not found
+WARNING: ImplementationGuide.id: The Implementation Guide Resource id should be example.fhir.ig
+WARNING: 1: The HTML fragment 'ip-statements.xhtml' is not included anywhere in the produced implementation guide
+WARNING: 2: An HTML fragment from the set [cross-version-analysis.xhtml, cross-version-analysis-inline.xhtml] is not included anywhere in the produced implementation guide
+WARNING: 3: An HTML fragment from the set [dependency-table.xhtml, dependency-table-short.xhtml, dependency-table-nontech.xhtml] is not included anywhere in the produced implementation guide
+WARNING: 4: The HTML fragment 'globals-table.xhtml' is not included anywhere in the produced implementation guide
+== input/resources/ImplementationGuide-example.json ==
+ERROR: ImplementationGuide/example: ImplementationGuide.definition: ImplementationGuide.definition.resource: minimum required = 1, but only found 0 (from http://hl7.org/fhir/StructureDefinition/ImplementationGuide|4.0.1)

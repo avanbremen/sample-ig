@@ -1,0 +1,7 @@
+[{
+  "id" : "example",
+  "type" : "ImplementationGuide",
+  "url" : "http://example.org/fhir/ImplementationGuide/example",
+  "version" : "0.1.0",
+  "name" : "ExampleIG"
+}]
