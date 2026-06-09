@@ -149,6 +149,8 @@ This approach keeps all previously published versions available while providing 
 A `versions.json` file is maintained in the root of the GitHub Pages site. It contains metadata about all published
 versions and identifies the current `latest` version.
 
+The `versions.json` file is generated automatically during deployment.
+
 Example:
 
 ```json
