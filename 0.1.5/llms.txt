@@ -1,0 +1,12 @@
+# example.fhir.ig#0.1.0: Example FHIR IG
+
+## Pages
+
+* [Home](index.md)
+* [Artifacts Summary](artifacts.md)
+
+## Resources
+
+### ImplementationGuides
+
+* [Example FHIR IG](index.md)

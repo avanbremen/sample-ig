@@ -1,0 +1,73 @@
+{
+  "date" : "Tue, 09 Jun, 2026 14:52:33 +0000",
+  "doco" : "For each file: start is seconds after start activity occurred. Length = milliseconds activity took",
+  "files" : [{
+    "name" : "/input/resources/ImplementationGuide-example.json",
+    "size" : 444,
+    "processes" : [{
+      "activity" : "load",
+      "start" : 32,
+      "length" : 20
+    },
+    {
+      "activity" : "checkR4R4B",
+      "start" : 32,
+      "length" : 12
+    },
+    {
+      "activity" : "generateNarratives",
+      "start" : 32,
+      "length" : 135
+    },
+    {
+      "activity" : "validate",
+      "start" : 32,
+      "length" : 3005
+    },
+    {
+      "activity" : "generate1",
+      "start" : 35,
+      "length" : 51
+    },
+    {
+      "activity" : "generate2",
+      "start" : 38,
+      "length" : 40
+    },
+    {
+      "activity" : "generateValidationPack",
+      "start" : 42,
+      "length" : 2
+    },
+    {
+      "activity" : "scanExamplesForR5",
+      "start" : 45,
+      "length" : 2
+    }]
+  },
+  {
+    "name" : "/input/includes/menu.xml",
+    "size" : 127
+  },
+  {
+    "name" : "/input/pagecontent/index.md",
+    "size" : 140
+  },
+  {
+    "name" : "/template/config",
+    "size" : 0,
+    "processes" : [{
+      "activity" : "generate2",
+      "start" : 38,
+      "length" : 1
+    }]
+  },
+  {
+    "name" : "/template/config/_config.yml",
+    "size" : 140
+  },
+  {
+    "name" : "/temp/pages/_includes/artifacts.xml",
+    "size" : 600
+  }]
+}
