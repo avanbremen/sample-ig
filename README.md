@@ -146,6 +146,29 @@ https://sample-ig.xtracked.io/
 
 This approach keeps all previously published versions available while providing a stable URL for the latest release.
 
+A `versions.json` file is maintained in the root of the GitHub Pages site. It contains metadata about all published
+versions and identifies the current `latest` version.
+
+Example:
+
+```json
+[
+  {
+    "version": "0.1.3",
+    "title": "0.1.3",
+    "aliases": ["latest"]
+  },
+  {
+    "version": "0.1.2",
+    "title": "0.1.2",
+    "aliases": []
+  }
+]
+```
+
+This metadata can be used by client-side JavaScript to implement features such as version switchers or warnings when
+viewing an outdated version.
+
 ### Custom domain support
 
 The GitHub Actions workflow automatically publishes a CNAME file to the `gh-pages` branch. This allows GitHub Pages to
@@ -211,3 +234,6 @@ Each version is published only once.
 The `latest` location contains a lightweight redirect rather than a copy of the generated HTML output. This avoids
 storing duplicate content and ensures that all version-specific URLs remain the canonical locations of published
 releases.
+
+The version metadata stored in `versions.json` makes it possible to build version-aware features without modifying
+previously published releases.
