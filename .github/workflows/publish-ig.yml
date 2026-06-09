@@ -94,21 +94,83 @@ jobs:
           which jekyll
           java -Dfile.encoding=UTF-8 -jar publisher.jar -ig ig.ini
 
-      - name: Add .nojekyll
-        # GitHub Pages may process published content with Jekyll. This generated
-        # IG is already a complete static site, so GitHub Pages should serve the
-        # files as-is. The .nojekyll marker disables GitHub Pages' Jekyll step and
-        # avoids surprises with generated files or folders that Jekyll treats specially.
+      - name: Prepare GitHub Pages content
+        # FHIR IG Publisher writes the generated static site to /output/.
+        #
+        # GitHub Pages should contain:
+        #
+        #   /                 -> redirects to /latest/
+        #   /latest/          -> redirects to the latest version folder
+        #   /<version>/       -> contains the actual generated IG snapshot
+        #
+        # The generated IG is copied into a versioned folder so that every
+        # published release remains available at a stable URL.
+        #
+        # Only redirects are created for / and /latest/. This avoids duplicating
+        # the full generated IG under both /latest/ and /<version>/.
+        #
+        # The .nojekyll marker tells GitHub Pages to serve the generated files
+        # as-is, without running its own Jekyll processing step.
         run: |
-          touch output/.nojekyll
+          mkdir -p "publish/${GITHUB_REF_NAME}"
+          cp -R output/. "publish/${GITHUB_REF_NAME}/"
 
-      - name: Deploy version to GitHub Pages branch
+          touch publish/.nojekyll
+
+          mkdir -p publish/latest
+
+          cat > publish/index.html <<EOF
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="utf-8">
+            <title>Redirecting</title>
+            <noscript>
+              <meta http-equiv="refresh" content="1; url=latest/" />
+            </noscript>
+            <script>
+              window.location.replace("latest/" + window.location.hash);
+            </script>
+          </head>
+          <body>
+            Redirecting to <a href="latest/">latest/</a>...
+          </body>
+          </html>
+          EOF
+
+          cat > publish/latest/index.html <<EOF
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="utf-8">
+            <title>Redirecting</title>
+            <noscript>
+              <meta http-equiv="refresh" content="1; url=../${GITHUB_REF_NAME}/" />
+            </noscript>
+            <script>
+              window.location.replace("../${GITHUB_REF_NAME}/" + window.location.hash);
+            </script>
+          </head>
+          <body>
+            Redirecting to <a href="../${GITHUB_REF_NAME}/">../${GITHUB_REF_NAME}/</a>...
+          </body>
+          </html>
+          EOF
+
+      - name: Deploy to GitHub Pages branch
+        # Publish the prepared /publish/ folder to the gh-pages branch.
+        #
+        # keep_files: true is important because each release only prepares the
+        # current version folder plus the root/latest redirects. Existing version
+        # folders on gh-pages must remain available.
+        #
+        # The cname value writes a CNAME file to the root of gh-pages so GitHub
+        # Pages serves the site through the configured custom domain.
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: output
-          destination_dir: ${{ github.ref_name }}
+          publish_dir: publish
           keep_files: true
           cname: sample-ig.xtracked.io
           commit_message: Deploy IG version ${{ github.ref_name }}
